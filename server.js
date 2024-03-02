@@ -54,16 +54,8 @@ app.get('/:id', async (req, res) => {
 
 app.post('/', upload.single('image'), async (req, res) => {
     const conn = await sql.connect(config)
-    const transaction = await conn.transaction()
-    transaction.begin(err => {
-        console.error(err)
-        transaction.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', '${req.file.filename}')`, (err, result) => {
-            console.error(err)
-            transaction.commit(err => {
-                console.error(err)
-            })
-        })
-    })
+    const response = await conn.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', '${req.file.filename}')`)
+    
     fs.readFile(`./uploads/${req.file.filename}`, async (err, data) => {
         const buffer = Buffer.from(data, 'base64')
         const blockBlobClient = containerClient.getBlockBlobClient(req.file.filename)
