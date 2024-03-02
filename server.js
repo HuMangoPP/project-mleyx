@@ -34,7 +34,7 @@ const containerClient = blobServiceClient.getContainerClient(process.env.APPSETT
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cors({
-    origin: process.env.FRONTEND_ORIGIN
+    origin: process.env.APPSETTING_FRONTEND_ORIGIN
 }))
 app.use(express.static('./uploads'))
 
