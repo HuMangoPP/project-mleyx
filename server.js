@@ -17,18 +17,18 @@ const storage = multer.diskStorage({
     cb(null, `${Date.now()}.${ext}`)
 }})
 const upload = multer({storage})
-const config = {
-    user: process.env.APPSETTING_SQL_USER,
-    password: process.env.APPSETTING_SQL_PW,
-    server: process.env.APPSETTING_SQL_SERVER,
-    database: process.env.APPSETTING_SQL_DB,
-    options: {
-        encrypt: true
-    }
-}
+// const config = {
+//     user: process.env.APPSETTING_SQL_USER,
+//     password: process.env.APPSETTING_SQL_PW,
+//     server: process.env.APPSETTING_SQL_SERVER,
+//     database: process.env.APPSETTING_SQL_DB,
+//     options: {
+//         encrypt: true
+//     }
+// }
 
-const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.APPSETTING_BLOB_CONN_STRING)
-const containerClient = blobServiceClient.getContainerClient(process.env.APPSETTING_BLOB_TABLE)
+// const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.APPSETTING_BLOB_CONN_STRING)
+// const containerClient = blobServiceClient.getContainerClient(process.env.APPSETTING_BLOB_TABLE)
 
 
 app.use(express.json())
@@ -39,32 +39,33 @@ app.use(cors({
 app.use(express.static('./uploads'))
 
 app.get('/', async (req, res) => {
-    const conn = await sql.connect(config)
-    const recordSet = await conn.request().query("SELECT * FROM dbo.Listings ORDER BY timestamp DESC")
-    res.json(recordSet.recordset)
+    // const conn = await sql.connect(config)
+    // const recordSet = await conn.request().query("SELECT * FROM dbo.Listings ORDER BY timestamp DESC")
+    // res.json(recordSet.recordset)
+    res.json([])
 })
 
 app.get('/:id', async (req, res) => {
     const filepath = `./uploads/${req.params.id}`
-    const blockBlobClient = containerClient.getBlockBlobClient(req.file.filename)
-    await blockBlobClient.downloadToFile(filepath)
+    // const blockBlobClient = containerClient.getBlockBlobClient(req.file.filename)
+    // await blockBlobClient.downloadToFile(filepath)
     
     res.sendFile(filepath)
 })
 
 app.post('/', upload.single('image'), async (req, res) => {
-    const conn = await sql.connect(config)
-    const response = await conn.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', '${req.file.filename}')`)
+    // const conn = await sql.connect(config)
+    // const response = await conn.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', '${req.file.filename}')`)
     
-    fs.readFile(`./uploads/${req.file.filename}`, async (err, data) => {
-        const buffer = Buffer.from(data, 'base64')
-        const blockBlobClient = containerClient.getBlockBlobClient(req.file.filename)
-        const response = await blockBlobClient.uploadData(buffer, {
-            blobHTTPHeaders: {
-                blobContentType: req.file.mimetype
-            }
-        })
-    })
+    // fs.readFile(`./uploads/${req.file.filename}`, async (err, data) => {
+    //     const buffer = Buffer.from(data, 'base64')
+    //     const blockBlobClient = containerClient.getBlockBlobClient(req.file.filename)
+    //     const response = await blockBlobClient.uploadData(buffer, {
+    //         blobHTTPHeaders: {
+    //             blobContentType: req.file.mimetype
+    //         }
+    //     })
+    // })
     res.json({})
 })
 
