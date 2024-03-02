@@ -1,2 +1,2 @@
-const baseUrl = "https://mleyx-app.azurewebsites.net/";
+const baseUrl = "http://localhost:3000/";
 export default baseUrl;
