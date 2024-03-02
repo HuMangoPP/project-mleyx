@@ -4,6 +4,7 @@ const sql = require('mssql')
 const cors = require('cors')
 const { BlobServiceClient } = require('@azure/storage-blob')
 const fs = require('fs')
+require('dotenv').config()
 
 const app = express()
 const storage = multer.diskStorage({
@@ -52,7 +53,7 @@ app.get('/:id', async (req, res) => {
 })
 
 app.post('/', upload.single('image'), async (req, res) => {
-    const conn = sql.connect(config)
+    const conn = await sql.connect(config)
     const transaction = await conn.transaction()
     transaction.begin(err => {
         console.error(err)
