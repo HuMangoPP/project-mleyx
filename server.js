@@ -76,4 +76,4 @@ app.post('/', upload.single('image'), async (req, res) => {
     res.json({})
 })
 
-app.listen(3000)
+app.listen(8080)
