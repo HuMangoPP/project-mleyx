@@ -18,17 +18,17 @@ const storage = multer.diskStorage({
 }})
 const upload = multer({storage})
 const config = {
-    user: process.env.SQL_USER,
-    password: process.env.SQL_PW,
-    server: process.env.SQL_SERVER,
-    database: process.env.SQL_DB,
+    user: process.env.APPSETTING_SQL_USER,
+    password: process.env.APPSETTING_SQL_PW,
+    server: process.env.APPSETTING_SQL_SERVER,
+    database: process.env.APPSETTING_SQL_DB,
     options: {
         encrypt: true
     }
 }
 
-const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.BLOB_CONN_STRING)
-const containerClient = blobServiceClient.getContainerClient(process.env.BLOB_TABLE)
+const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.APPSETTING_BLOB_CONN_STRING)
+const containerClient = blobServiceClient.getContainerClient(process.env.APPSETTING_BLOB_TABLE)
 
 
 app.use(express.json())
