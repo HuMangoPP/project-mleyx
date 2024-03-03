@@ -7,15 +7,7 @@ const fs = require('fs')
 require('dotenv').config()
 
 const app = express()
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './uploads')
-    }, 
-    filename: (req, file, cb) => {
-    const extArray = file.mimetype.split("/")
-    const ext = extArray[extArray.length - 1]
-    cb(null, `${Date.now()}.${ext}`)
-}})
+const storage = multer.memoryStorage()
 const upload = multer({storage})
 const config = {
     user: process.env.APPSETTING_SQL_USER,
