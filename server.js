@@ -37,23 +37,15 @@ app.get('/', async (req, res) => {
 
 app.post('/new', upload.single('image'), async (req, res) => {
     const filename = `${Date.now()}-${req.file.originalname}`
-    const conn = await sql.connect(config)
-    const response = await conn.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', '${filename}')`)
     const blockBlobClient = containerClient.getBlockBlobClient(filename)
     const blobResponse = await blockBlobClient.uploadData(req.file.buffer, {
         blobHTTPHeaders: {
             blobContentType: req.file.mimetype
         }
     })
+    const conn = await sql.connect(config)
+    const response = await conn.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', '${blockBlobClient.url}')`)
     res.json({})
-})
-
-app.get('/:id', async (req, res) => {
-    const filepath = `./uploads/${req.params.id}`
-    // const blockBlobClient = containerClient.getBlockBlobClient(req.file.filename)
-    // await blockBlobClient.downloadToFile(filepath)
-    
-    res.sendFile(filepath)
 })
 
 app.listen(process.env.PORT || 3000)
