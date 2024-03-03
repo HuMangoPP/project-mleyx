@@ -27,7 +27,6 @@ app.use(express.urlencoded({extended: true}))
 app.use(cors({
     origin: process.env.APPSETTING_FRONTEND_ORIGIN
 }))
-app.use(express.static('./uploads'))
 
 app.get('/', async (req, res) => {
     const conn = await sql.connect(config)
@@ -37,11 +36,13 @@ app.get('/', async (req, res) => {
 
 app.post('/new', upload.single('image'), async (req, res) => {
     const filename = `${Date.now()}-${req.file.originalname}`
-    const conn = await sql.connect(config)
-    await conn.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', '${filename}')`)
 
     const blockBlobClient = containerClient.getBlockBlobClient(filename)
-    await blockBlobClient.uploadData(req.file.buffer)
+    // await blockBlobClient.uploadData(req.file.buffer)
+
+    const conn = await sql.connect(config)
+    await conn.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', '${blockBlobClient.url}')`)
+
     res.json({})
 })
 
