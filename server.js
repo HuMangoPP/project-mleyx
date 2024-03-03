@@ -46,8 +46,8 @@ app.get('/', async (req, res) => {
 
 app.get('/:id', async (req, res) => {
     const filepath = `./uploads/${req.params.id}`
-    const blockBlobClient = containerClient.getBlockBlobClient(req.file.filename)
-    await blockBlobClient.downloadToFile(filepath)
+    // const blockBlobClient = containerClient.getBlockBlobClient(req.file.filename)
+    // await blockBlobClient.downloadToFile(filepath)
     
     res.sendFile(filepath)
 })
@@ -56,15 +56,15 @@ app.post('/', upload.single('image'), async (req, res) => {
     const conn = await sql.connect(config)
     const response = await conn.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', '${req.file.filename}')`)
     
-    fs.readFile(`./uploads/${req.file.filename}`, async (err, data) => {
-        const buffer = Buffer.from(data, 'base64')
-        const blockBlobClient = containerClient.getBlockBlobClient(req.file.filename)
-        const response = await blockBlobClient.uploadData(buffer, {
-            blobHTTPHeaders: {
-                blobContentType: req.file.mimetype
-            }
-        })
-    })
+    // fs.readFile(`./uploads/${req.file.filename}`, async (err, data) => {
+    //     const buffer = Buffer.from(data, 'base64')
+    //     const blockBlobClient = containerClient.getBlockBlobClient(req.file.filename)
+    //     const response = await blockBlobClient.uploadData(buffer, {
+    //         blobHTTPHeaders: {
+    //             blobContentType: req.file.mimetype
+    //         }
+    //     })
+    // })
     res.json({})
 })
 
