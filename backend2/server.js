@@ -46,7 +46,7 @@ app.post('/new', upload.single('image'), async (req, res) => {
         VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', '${blockBlobClient.url}')
     `)
 
-    res.status(201)
+    res.json({}).status(201)
 })
 
 app.post('/edit', upload.single('image'), async (req, res) => {
@@ -69,7 +69,7 @@ app.post('/edit', upload.single('image'), async (req, res) => {
         `)
     }
 
-    res.status(201)
+    res.json({}).status(201)
 })
 
 app.listen(process.env.PORT || 3000)

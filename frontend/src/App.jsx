@@ -28,9 +28,7 @@ function App() {
       method: "POST",
       body: formData,
     }).then((res) => {
-      if (res.ok) {
-        getListings();
-      }
+      getListings();
     });
   };
 
@@ -39,11 +37,9 @@ function App() {
       method: "POST",
       body: formData,
     }).then((res) => {
-      if (res.ok) {
-        getListings();
-      }
+      getListings();
     });
-  }
+  };
 
   const returnToHomepage = () => {
     setCreatingNewListing(false);
@@ -51,8 +47,8 @@ function App() {
   };
 
   const isEditing = () => {
-    return Object.keys(editing).length !== 0
-  }
+    return Object.keys(editing).length !== 0;
+  };
 
   return (
     <>
@@ -71,7 +67,7 @@ function App() {
             />
           ) : (
             <div className="d-flex justify-content-center mt-3">
-              <Listings listings={listings} beginEdit={setEditing}/>
+              <Listings listings={listings} beginEdit={setEditing} />
               <div className="mx-3">
                 <button
                   onClick={(e) => setCreatingNewListing(true)}
