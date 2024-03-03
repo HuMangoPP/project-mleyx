@@ -46,7 +46,7 @@ app.get('/', async (req, res) => {
 
 app.post('/new', async (req, res) => {
     const conn = await sql.connect(config)
-    const response = await conn.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', 'file.png')`)
+    // const response = await conn.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', 'file.png')`)
     
     // fs.readFile(`./uploads/${req.file.filename}`, async (err, data) => {
     //     const buffer = Buffer.from(data, 'base64')
