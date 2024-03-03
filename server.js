@@ -44,7 +44,7 @@ app.get('/', async (req, res) => {
     res.json(recordSet.recordset)
 })
 
-app.post('/new', async (req, res) => {
+app.post('/new', upload.none(), async (req, res) => {
     const conn = await sql.connect(config)
     // const response = await conn.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', 'file.png')`)
     const response = await conn.request().query(`INSERT INTO dbo.Listings (id, name, about) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}')`)
