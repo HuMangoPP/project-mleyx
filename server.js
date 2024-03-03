@@ -2,7 +2,7 @@ const express = require('express')
 
 const app = express()
 
-app.get('/api', async (req, res) => {
+app.get('/', (req, res) => {
     res.json({message: "Hi!"})
 })
 
