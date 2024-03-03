@@ -38,7 +38,7 @@ app.post('/new', upload.single('image'), async (req, res) => {
     const filename = `${Date.now()}-${req.file.originalname}`
 
     const blockBlobClient = containerClient.getBlockBlobClient(filename)
-    // await blockBlobClient.uploadData(req.file.buffer)
+    await blockBlobClient.uploadData(req.file.buffer)
 
     const conn = await sql.connect(config)
     await conn.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', '${blockBlobClient.url}')`)
