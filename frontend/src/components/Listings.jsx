@@ -1,6 +1,6 @@
 import { Listing } from "./Listing";
 
-export function Listings({ listings }) {
+export function Listings({ listings, beginEdit }) {
   return (
     <div className="w-50 mx-3">
       <h1 className="mb-3">Listings</h1>
@@ -9,7 +9,7 @@ export function Listings({ listings }) {
           <p className="lead text-muted">No Listings Found</p>
         )}
         {listings.map((listing) => (
-          <Listing {...listing} key={listing.id} />
+          <Listing {...listing} key={listing.id} beginEdit={beginEdit} />
         ))}
       </div>
     </div>

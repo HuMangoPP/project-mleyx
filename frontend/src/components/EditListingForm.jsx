@@ -1,21 +1,26 @@
 import date from "date-and-time";
+import { useState } from "react";
 
-export function NewListingForm({ onSubmit, returnToHomepage }) {
+export function EditListingForm({ onSubmit, returnToHomepage, listing }) {
+  const [name, setName] = useState(listing.name);
+  const [about, setAbout] = useState(listing.about);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (e.target.name.value === "") return;
-    if (e.target.about.value === "") return;
-    if (e.target.image.value === "") return;
+    if (name === "") return;
+    if (about === "") return;
 
     const formData = new FormData();
-    formData.append("id", crypto.randomUUID());
-    formData.append("name", e.target.name.value);
-    formData.append("about", e.target.about.value);
+    formData.append("id", listing.id);
+    formData.append("name", name);
+    formData.append("about", about);
     formData.append(
       "timestamp",
       date.format(new Date(), "YYYY-MM-DD HH:mm:ss")
     );
-    formData.append("image", e.target.image.files[0]);
+    if (e.target.image.value !== "") {
+      formData.append("image", e.target.image.files[0]);
+    }
     onSubmit(formData);
     returnToHomepage();
   };
@@ -23,7 +28,7 @@ export function NewListingForm({ onSubmit, returnToHomepage }) {
   return (
     <>
       <div className="d-flex mx-5 my-3">
-        <div className="me-auto fw-bold h2">Create a Listing</div>
+        <div className="me-auto fw-bold h2">Edit Listing</div>
         <button className="btn-close" onClick={returnToHomepage}></button>
       </div>
       <form onSubmit={handleSubmit} className="mx-5">
@@ -32,7 +37,15 @@ export function NewListingForm({ onSubmit, returnToHomepage }) {
             School Name
           </label>
           <div className="col">
-            <input className="form-control" type="text" id="name" />
+            <input
+              className="form-control"
+              type="text"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+              id="name"
+            />
           </div>
         </div>
         <div className="mb-3 row">
@@ -40,7 +53,15 @@ export function NewListingForm({ onSubmit, returnToHomepage }) {
             About
           </label>
           <div className="col">
-            <textarea className="form-control" rows="5" id="about" />
+            <textarea
+              className="form-control"
+              rows="5"
+              value={about}
+              onChange={(e) => {
+                setAbout(e.target.value);
+              }}
+              id="about"
+            />
           </div>
         </div>
         <div className="mb-3 row">
