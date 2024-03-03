@@ -31,7 +31,7 @@ app.use(cors({
 app.get('/', async (req, res) => {
     const conn = await sql.connect(config)
     const recordSet = await conn.request().query("SELECT * FROM dbo.Listings ORDER BY timestamp DESC")
-    res.json(recordSet.recordset)
+    res.json(recordSet.recordset).status(200)
 })
 
 app.post('/new', upload.single('image'), async (req, res) => {
@@ -41,9 +41,35 @@ app.post('/new', upload.single('image'), async (req, res) => {
     await blockBlobClient.uploadData(req.file.buffer)
 
     const conn = await sql.connect(config)
-    await conn.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', '${blockBlobClient.url}')`)
+    await conn.request().query(`
+        INSERT INTO dbo.Listings (id, name, about, timestamp, image) 
+        VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', '${blockBlobClient.url}')
+    `)
 
-    res.json({})
+    res.status(201)
+})
+
+app.post('/edit', upload.single('image'), async (req, res) => {
+    const conn = await sql.connect(config)
+    if (req.file) {
+        const filename = `${Date.now()}-${req.file.originalname}`
+        const blockBlobClient = containerClient.getBlockBlobClient(filename)
+        await blockBlobClient.uploadData(req.file.buffer)
+        
+        await conn.request().query(`
+            UPDATE dbo.Listings 
+            SET name = '${req.body.name}', about = '${req.body.about}', timestamp = '${req.body.timestamp}', image = '${blockBlobClient.url}'
+            WHERE id = '${req.body.id}'
+        `)
+    } else {
+        await conn.request().query(`
+            UPDATE dbo.Listings 
+            SET name = '${req.body.name}', about = '${req.body.about}', timestamp = '${req.body.timestamp}'
+            WHERE id = '${req.body.id}'
+        `)
+    }
+
+    res.status(201)
 })
 
 app.listen(process.env.PORT || 3000)
