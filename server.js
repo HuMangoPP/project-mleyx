@@ -44,15 +44,7 @@ app.get('/', async (req, res) => {
     res.json(recordSet.recordset)
 })
 
-app.get('/:id', async (req, res) => {
-    const filepath = `./uploads/${req.params.id}`
-    // const blockBlobClient = containerClient.getBlockBlobClient(req.file.filename)
-    // await blockBlobClient.downloadToFile(filepath)
-    
-    res.sendFile(filepath)
-})
-
-app.post('/', upload.single('image'), async (req, res) => {
+app.post('/new', upload.single('image'), async (req, res) => {
     // const conn = await sql.connect(config)
     // const response = await conn.request().query(`INSERT INTO dbo.Listings (id, name, about, timestamp, image) VALUES ('${req.body.id}', '${req.body.name}', '${req.body.about}', '${req.body.timestamp}', '${req.file.filename}')`)
     
@@ -66,6 +58,14 @@ app.post('/', upload.single('image'), async (req, res) => {
     //     })
     // })
     res.json({})
+})
+
+app.get('/:id', async (req, res) => {
+    const filepath = `./uploads/${req.params.id}`
+    // const blockBlobClient = containerClient.getBlockBlobClient(req.file.filename)
+    // await blockBlobClient.downloadToFile(filepath)
+    
+    res.sendFile(filepath)
 })
 
 app.listen(process.env.PORT || 3000)
